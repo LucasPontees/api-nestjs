@@ -1,6 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -21,7 +26,23 @@ export class UsersService {
     });
   }
 
-  async findAll() {
-    return this.prisma.user.findMany();
+  async update(id: string, dto: UpdateUserDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) throw new NotFoundException('Usuário não encontrado');
+
+    if (dto.email && dto.email !== user.email) {
+      const emailJaExiste = await this.prisma.user.findUnique({
+        where: { email: dto.email },
+      });
+      if (emailJaExiste) throw new BadRequestException('Email já está em uso');
+    }
+
+    return this.prisma.user.update({
+      where: { id },
+      data: dto,
+    });
   }
 }
