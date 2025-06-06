@@ -19,7 +19,7 @@ export class CreateUserDto {
   email: string;
 
   @ApiProperty({
-    example: 'senhaSegura123',
+    example: 'senhaSegura123@',
     description: 'Senha do usuário',
     minLength: 6,
   })

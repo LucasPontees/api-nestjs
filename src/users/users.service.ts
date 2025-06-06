@@ -6,12 +6,13 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-
+import * as argon2 from 'argon2';
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateUserDto) {
+    const hashedPassword = await argon2.hash(data.password);
     const emailJaExiste = await this.prisma.user.findUnique({
       where: { email: data.email },
     });
@@ -21,7 +22,7 @@ export class UsersService {
       data: {
         name: data.name,
         email: data.email,
-        password: data.password,
+        password: hashedPassword,
       },
     });
   }
@@ -40,9 +41,42 @@ export class UsersService {
       if (emailJaExiste) throw new BadRequestException('Email já está em uso');
     }
 
+    const dataToUpdate = { ...dto };
+
+    if (dto.password) {
+      dataToUpdate.password = await argon2.hash(dto.password);
+    }
+
     return this.prisma.user.update({
       where: { id },
-      data: dto,
+      data: dataToUpdate,
     });
+  }
+
+  async findById(id: string) {
+    const usuario = await this.prisma.user.findUnique({
+      where: { id, deleted: 'N' },
+    });
+
+    if (!usuario) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    return usuario;
+  }
+
+  async findAll() {
+    return this.prisma.user.findMany({
+      where: { deleted: 'N' },
+    });
+  }
+
+  async softDelete(id: string) {
+    const usuario = await this.prisma.user.update({
+      where: { id },
+      data: { deleted: 'S' },
+    });
+
+    return { message: 'Usuário marcado como deletado com sucesso', usuario };
   }
 }
