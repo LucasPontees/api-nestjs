@@ -23,6 +23,7 @@ export class UsersService {
         name: data.name,
         email: data.email,
         password: hashedPassword,
+        avatarUrl: data.avatarUrl,
       },
     });
   }

@@ -8,11 +8,12 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(cuid())
-  name     String
-  email    String   @unique
-  password String
-  deleted  Deletado @default(N)
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  deleted   Deletado @default(N)
+  avatarUrl String?
 }
 
 enum Deletado {

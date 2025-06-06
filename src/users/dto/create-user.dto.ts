@@ -4,6 +4,7 @@ import {
   MinLength,
   IsNotEmpty,
   Matches,
+  IsOptional,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 export class CreateUserDto {
@@ -32,4 +33,7 @@ export class CreateUserDto {
     message: 'A senha deve conter pelo menos um caractere especial.',
   })
   password: string;
+  @IsOptional()
+  @IsString()
+  avatarUrl?: string;
 }
