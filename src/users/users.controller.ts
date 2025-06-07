@@ -45,7 +45,7 @@ export class UsersController {
         name: { type: 'string', example: 'John Doe' },
         email: { type: 'string', example: 'user@example.com' },
         password: { type: 'string', example: 'senhaSegura123@' },
-        avatar: {
+        avatarUrl: {
           type: 'string',
           format: 'binary',
           description: 'Arquivo de imagem do avatar',
@@ -55,7 +55,7 @@ export class UsersController {
     },
   })
   @UseInterceptors(
-    FileInterceptor('avatar', {
+    FileInterceptor('avatarUrl', {
       storage: diskStorage({
         destination: './uploads/avatars',
         filename: (req, file, cb) => {
