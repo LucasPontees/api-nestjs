@@ -30,6 +30,7 @@ import { extname } from 'path';
 import { file as MulterFile } from 'multer';
 import * as fs from 'fs';
 import * as path from 'path';
+import { join } from 'path';
 
 @ApiTags('users')
 @Controller('users')
@@ -57,13 +58,13 @@ export class UsersController {
   @UseInterceptors(
     FileInterceptor('avatarUrl', {
       storage: diskStorage({
-        destination: './uploads/avatars',
+        destination: join(__dirname, '..', '..', 'uploads'), // <- Caminho absoluto
         filename: (req, file, cb) => {
-          const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
           cb(null, uniqueSuffix + extname(file.originalname));
         },
       }),
+      
       fileFilter: (req, file, cb) => {
         if (!file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
           return cb(new Error('Apenas imagens são permitidas!'), false);
@@ -79,7 +80,7 @@ export class UsersController {
   ) {
     let avatarUrl: string | undefined = undefined;
     if (file) {
-      avatarUrl = `uploads/avatars/${file.filename}`;
+      avatarUrl = `uploads/${file.filename}`;
     }
     try {
       return await this.usersService.create({ ...createUserDto, avatarUrl });
@@ -95,13 +96,6 @@ export class UsersController {
     }
   }
 
-  @Put(':id')
-  @ApiOkResponse({ description: 'Usuário atualizado com sucesso' })
-  @ApiNotFoundResponse({ description: 'Usuário não encontrado' })
-  @ApiConflictResponse({ description: 'Email já está em uso' })
-  async update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
-    return this.usersService.update(id, dto);
-  }
 
   @Get(':id')
   async findById(@Param('id') id: string) {
@@ -126,14 +120,13 @@ export class UsersController {
   @UseInterceptors(
     FileInterceptor('avatar', {
       storage: diskStorage({
-        destination: './uploads/avatars',
+        destination: join(__dirname, '..', '..', 'uploads'), // <- Caminho absoluto
         filename: (req, file, cb) => {
-          // Gera um nome único para o arquivo
-          const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
           cb(null, uniqueSuffix + extname(file.originalname));
         },
       }),
+      
       fileFilter: (req, file, cb) => {
         // Aceita apenas imagens
         if (!file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
@@ -152,7 +145,7 @@ export class UsersController {
       throw new BadRequestException('Arquivo não enviado');
     }
     // Atualiza o usuário com o caminho do avatar
-    const avatarUrl = `uploads/avatars/${file.filename}`;
+    const avatarUrl = `/uploads/${file.filename}`;
     return this.usersService.update(id, { avatarUrl } as UpdateUserDto);
   }
 }
