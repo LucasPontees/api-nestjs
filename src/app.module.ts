@@ -12,7 +12,7 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     // Serve arquivos da pasta /uploads via rota /uploads
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),
+      rootPath: join(process.cwd(), 'uploads'),
       serveRoot: '/uploads',
     }),
     UsersModule,
