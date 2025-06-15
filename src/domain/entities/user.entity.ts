@@ -19,10 +19,11 @@ export class User extends Entity {
   }
 
   public static create({ email, password }: UserCreateDto): User {
-    const id = Utils.GenerateUUID();
+    const id = Utils.generateUUID();
+    const hashedPassword = Utils.encryptPassword(password);
     const createdAt = new Date();
     const updatedAt = new Date();
-    return new User(id, email, password, createdAt, updatedAt);
+    return new User(id, email, hashedPassword, createdAt, updatedAt);
   }
 
   protected validate(): void {}
@@ -32,5 +33,9 @@ export class User extends Entity {
   }
   public getPassword(): string {
     return this.password;
+  }
+
+  public comparePassword(aPassword: string): boolean {
+    return Utils.comparePasswords(aPassword, this.password);
   }
 }
