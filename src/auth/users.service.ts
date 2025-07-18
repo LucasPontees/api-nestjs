@@ -3,7 +3,7 @@ import {
   CreateUserDto,
   LoginUserDto,
   UpdatePasswordDto,
-} from "./dtos/users.user.dto";
+} from "./dto/users.user.dto";
 import { compare, hash } from "bcrypt";
 import { PrismaService } from "../../prisma/prisma.service";
 import { User } from "@prisma/client";
@@ -15,25 +15,6 @@ interface FormatLogin extends Partial<User> {
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
-
-  //use by user module to change user password
-  async updatePassword(payload: UpdatePasswordDto, id: number): Promise<User> {
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-    });
-    if (!user) {
-      throw new HttpException("invalid_credentials", HttpStatus.UNAUTHORIZED);
-    }
-    // compare passwords
-    const areEqual = await compare(payload.old_password, user.password);
-    if (!areEqual) {
-      throw new HttpException("invalid_credentials", HttpStatus.UNAUTHORIZED);
-    }
-    return await this.prisma.user.update({
-      where: { id },
-      data: { password: await hash(payload.new_password, 10) },
-    });
-  }
   //use by auth module to register user in database
   async create(userDto: CreateUserDto): Promise<any> {
     // // check if the user exists in the db

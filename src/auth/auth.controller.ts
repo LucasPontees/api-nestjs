@@ -6,7 +6,7 @@ import {
   Post,
 } from "@nestjs/common";
 import { AuthService, RegistrationStatus } from "./auth.service";
-import { CreateUserDto, LoginUserDto } from "../users/dtos/users.user.dto";
+import { CreateUserDto, LoginUserDto } from "./dto/users.user.dto";
 import { ApiTags } from "@nestjs/swagger";
 
 @ApiTags("auth")
@@ -16,7 +16,7 @@ export class AuthController {
 
   @Post("register")
   public async register(
-    @Body() createUserDto: CreateUserDto,
+    @Body() createUserDto: CreateUserDto
   ): Promise<RegistrationStatus> {
     const result: RegistrationStatus =
       await this.authService.register(createUserDto);

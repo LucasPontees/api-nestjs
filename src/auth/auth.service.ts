@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { UsersService } from "../users/users.service";
+import { UsersService } from "./users.service";
 import { JwtService } from "@nestjs/jwt";
-import { CreateUserDto, LoginUserDto } from "../users/dtos/users.user.dto";
+import { CreateUserDto, LoginUserDto } from "./dto/users.user.dto";
 import { JwtPayload } from "./jwt.strategy";
 import { PrismaService } from "../../prisma/prisma.service";
 import { User } from "@prisma/client";
@@ -11,7 +11,7 @@ export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
-    private readonly usersService: UsersService,
+    private readonly usersService: UsersService
   ) {}
 
   async register(userDto: CreateUserDto): Promise<RegistrationStatus> {
