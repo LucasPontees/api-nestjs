@@ -9,7 +9,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const secret = process.env.SECRETKEY;
     if (!secret) {
       throw new Error(
-        "JWT secret key (SECRETKEY) is not defined in environment variables",
+        "JWT secret key (SECRETKEY) is not defined in environment variables"
       );
     }
     super({
@@ -29,5 +29,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 }
 
 export interface JwtPayload {
+  sub: string;
   login: string;
 }

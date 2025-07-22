@@ -44,12 +44,20 @@ export class AuthService {
     };
   }
 
-  private _createToken({ login }): any {
-    const user: JwtPayload = { login };
-    const Authorization = this.jwtService.sign(user);
+  private _createToken(user: any): { access_token: string; expiresIn: number } {
+    const payload: JwtPayload = {
+      login: user.login,
+      sub: user.id,
+    };
+
+    const access_token = this.jwtService.sign(payload, {
+      expiresIn: process.env.EXPIRESIN || "1d", // default to 1 day if not set
+      secret: process.env.SECRETKEY,
+    });
+
     return {
-      expiresIn: process.env.EXPIRESIN,
-      Authorization,
+      access_token,
+      expiresIn: parseInt(process.env.EXPIRESIN ?? "86400", 10),
     };
   }
 
