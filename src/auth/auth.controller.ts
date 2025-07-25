@@ -1,16 +1,8 @@
-import {
-  Body,
-  Controller,
-  HttpException,
-  HttpStatus,
-  Post,
-  Res,
-} from "@nestjs/common";
-import { AuthService, RegistrationStatus } from "./auth.service";
-import { CreateUserDto, LoginUserDto } from "../users/dtos/users.user.dto";
+import { Body, Controller, Post, Res } from "@nestjs/common";
+import { AuthService } from "./auth.service";
+import { LoginUserDto } from "../users/dtos/users.user.dto";
 import { ApiTags } from "@nestjs/swagger";
-import { Response } from 'express';
-
+import { Response } from "express";
 
 @ApiTags("auth")
 @Controller("auth")
@@ -20,7 +12,7 @@ export class AuthController {
   @Post("login")
   public async login(
     @Body() loginUserDto: LoginUserDto,
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: Response,
   ): Promise<any> {
     const { Authorization, expiresIn, data } =
       await this.authService.login(loginUserDto);

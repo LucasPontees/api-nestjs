@@ -15,7 +15,7 @@ export class UsersController {
 
   @Post("create")
   async createUser(
-    @Body() createUserDto: CreateUserDto
+    @Body() createUserDto: CreateUserDto,
   ): Promise<RegistrationStatus> {
     const result: RegistrationStatus =
       await this.authService.register(createUserDto);
