@@ -5,8 +5,8 @@ import {
   HttpStatus,
   Post,
 } from "@nestjs/common";
-import { CreateUserDto } from "../dtos/users.user.dto";
-import { AuthService, RegistrationStatus } from "src/auth/auth.service";
+import { CreateUserDto } from "@/users/dtos/users.user.dto";
+import { AuthService, RegistrationStatus } from "@/auth/auth.service";
 import { ApiTags } from "@nestjs/swagger";
 @ApiTags("users")
 @Controller("users")

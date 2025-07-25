@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { CreateUserDto, LoginUserDto } from "./dtos/users.user.dto";
+import { CreateUserDto, LoginUserDto } from "@/users/dtos/users.user.dto";
 import { compare, hash } from "bcrypt";
-import { PrismaService } from "../../prisma/prisma.service";
+import { PrismaService } from "../../../prisma/prisma.service";
 import { User } from "@prisma/client";
 
 interface FormatLogin extends Partial<User> {
